@@ -114,8 +114,13 @@ router.get("/:id", async (req, res) => {
     const data = await loadData();
     const schema = deriveSchema(data);
     const id = parseInt(req.params.id, 10);
+    const idField = schema.find((f) => f.name === "id");
+    if (!idField) {
+      res.status(400).json({ error: "No ID field found in schema" });
+      return;
+    }
 
-    const row = data.find((r) => r["Station id"] === id);
+    const row = data.find((r) => r[idField.display] === id);
     if (!row) {
       res.status(404).json({ error: "Station not found" });
       return;

@@ -10,7 +10,6 @@ router.get("/", async (req, res) => {
     const schema = deriveSchema(data);
     res.json(schema);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: "Failed to derive schema" });
   }
 });
