@@ -15,7 +15,7 @@ Runs on http://localhost:3000
 
 `POST /data` - returns filtered data
 
-`GET /data/:id` - returns a single station by its Station id
+`GET /data/:id` - returns a single station by its unique id
 
 ### Filtering
 
@@ -38,7 +38,7 @@ curl -X POST http://localhost:3000/data \
 ### Single station
 
 ```
-curl http://localhost:3000/data/5
+curl http://localhost:3000/data/44433611
 ```
 
 ## Example requests
