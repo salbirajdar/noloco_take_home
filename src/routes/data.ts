@@ -75,7 +75,7 @@ router.post("/", async (req, res) => {
   try {
     const data = await loadData();
     const schema = deriveSchema(data);
-    const where = req.body?.where || {};
+    const { where = {}, orderBy, limit, offset = 0 } = req.body || {};
 
     let results = data.map((row) => transformRow(row, schema));
 
@@ -83,7 +83,45 @@ router.post("/", async (req, res) => {
       results = results.filter((row) => matchesFilter(row, where, schema));
     }
 
+    if (orderBy) {
+      const { field, direction = "asc" } = orderBy;
+      results.sort((a, b) => {
+        const valA = a[field];
+        const valB = b[field];
+        if (valA === null || valA === undefined) return 1;
+        if (valB === null || valB === undefined) return -1;
+        if (valA < valB) return direction === "asc" ? -1 : 1;
+        if (valA > valB) return direction === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+
+    if (offset) {
+      results = results.slice(offset);
+    }
+    if (limit) {
+      results = results.slice(0, limit);
+    }
+
     res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const data = await loadData();
+    const schema = deriveSchema(data);
+    const id = parseInt(req.params.id, 10);
+
+    const row = data.find((r) => r["Station id"] === id);
+    if (!row) {
+      res.status(404).json({ error: "Station not found" });
+      return;
+    }
+
+    res.json(transformRow(row, schema));
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch data" });
   }
