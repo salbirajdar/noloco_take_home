@@ -66,10 +66,10 @@ curl -s -X POST http://localhost:3000/data -H "Content-Type: application/json" -
 curl -s -X POST http://localhost:3000/data -H "Content-Type: application/json" -d '{"limit": 5, "offset": 5}'
 
 # single station by id
-curl -s http://localhost:3000/data/5
+curl -s http://localhost:3000/data/44433567
 
 # station not found
-curl -s http://localhost:3000/data/999
+curl -s http://localhost:3000/data/5
 ```
 
 ## Technical decisions
